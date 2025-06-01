@@ -37,8 +37,9 @@ class MailingMessage:
         self.db_session.commit()
 
 
-def get_new_messages():
-    session = SessionLocal()  # Открываем сессию вручную
+def get_new_messages(db_session=None):
+    session = db_session or SessionLocal()
+
     try:
         stmt = select(Mailing).where(Mailing.status == 'new')
         new_messages = session.execute(stmt).scalars().all()
@@ -46,5 +47,5 @@ def get_new_messages():
             return None
         return [MailingMessage(message.id, session) for message in new_messages]
     except Exception as e:
-        session.close()  # Закрываем сессию при ошибке
-        raise e
+        print(e)
+        return None

@@ -28,12 +28,10 @@ def start_processing():
                 message_obj.set_new_status('error')
                 if message_obj.message.attachment:
                     message_obj.delete_attachment_content()
-    else:
-        print('Нет новых сообщений...')
 
 
 if __name__ == "__main__":
     print("Запуск mail sender...")
     while True:
         start_processing()
-        time.sleep(5)
+        time.sleep(10)

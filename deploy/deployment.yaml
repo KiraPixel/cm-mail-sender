@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail-sender
+  namespace: prd-cm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail-sender
+  template:
+    metadata:
+      labels:
+        app: mail-sender
+    spec:
+      containers:
+        - name: report-generator
+          image: ghcr.io/kirapixel/cm-mail-sender:20250531212007
+          envFrom:
+            - secretRef:
+                name: flask-cm-spectr-secret

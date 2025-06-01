@@ -1,0 +1,27 @@
+def insert_mailing_record_sqlalchemy(target, subject, content,
+                                    html_template=None,
+                                    attachment_name=None,
+                                    attachment_content=None):
+    """
+    Сохраняет письмо в базу данных.
+    """
+    sql = text("""
+        CALL insert_mailing_record(
+            :target,
+            :subject,
+            :content,
+            :html_template,
+            :attachment_name,
+            :attachment_content
+        )
+    """)
+
+    db.session.execute(sql, {
+        'target': target,
+        'subject': subject,
+        'content': content,
+        'html_template': html_template,
+        'attachment_name': attachment_name,
+        'attachment_content': attachment_content
+    })
+    db.session.commit()

@@ -29,6 +29,8 @@ def start_processing():
                 if message_obj.message.attachment:
                     message_obj.delete_attachment_content()
 
+            new_messages[0].close_session()
+
 
 if __name__ == "__main__":
     print("Запуск mail sender...")

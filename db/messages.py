@@ -36,6 +36,9 @@ class MailingMessage:
         self.message.content = b"html_content"
         self.db_session.commit()
 
+    def close_session(self):
+        self.db_session.close()
+
 
 def get_new_messages(db_session=None):
     session = db_session or SessionLocal()
@@ -44,6 +47,7 @@ def get_new_messages(db_session=None):
         stmt = select(Mailing).where(Mailing.status == 'new')
         new_messages = session.execute(stmt).scalars().all()
         if not new_messages:
+            session.close()
             return None
         return [MailingMessage(message.id, session) for message in new_messages]
     except Exception as e:

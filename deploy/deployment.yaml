@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: report-generator
-          image: ghcr.io/kirapixel/cm-mail-sender:20250601134527
+          image: ghcr.io/kirapixel/cm-mail-sender:20250601144059
           envFrom:
             - secretRef:
                 name: flask-cm-spectr-secret

@@ -42,7 +42,7 @@ def prepare_content_by_template(template_name: str, content):
         return process_html_template(template_name, data)
     elif template_name == "new_user":
         try:
-            username, password = content.split('|', 1)
+            username, password = content.split('|')
         except ValueError:
             return None
         data = {

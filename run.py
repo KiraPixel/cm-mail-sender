@@ -1,19 +1,36 @@
+import logging
+import os
 import time
 from db.messages import get_new_messages
 from modules.api_cm import get_cm_health
 from modules.mail_sender import send_email
 
 
+int_level=logging.INFO
+if os.getenv('DEV', '0') == '1':
+    int_level = logging.DEBUG
+
+logging.basicConfig(
+    level=int_level,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger('cm_mail_sender')
+
+
+
 def start_processing():
     new_messages = get_new_messages()
     if not get_cm_health():
-        print("Приложите подорожник к ЦМ")
-        print("Фрижу процесс на 1 минуту")
+        logger.info('CM Health check failed.')
+        logger.info('Wait 1 minute before retrying.')
         time.sleep(60)
         return
     if new_messages:
         for message_obj in new_messages:
-            print(f'try send message to {message_obj.message.target_email}')
+            logger.info(f'Processing message: {message_obj.message.target_email}')
             if message_obj.message.status != 'new':
                 pass
             send_mail=send_email(message_obj.message.target_email, message_obj.message.subject, message_obj.message.content, attachment_name=message_obj.message.attachment_name, attachment_content=message_obj.message.attachment_content)
@@ -33,7 +50,8 @@ def start_processing():
 
 
 if __name__ == "__main__":
-    print("Запуск mail sender...")
+    logger.info("Запуск планировщика задач...")
+    logger.debug("ВНИМАНИЕ! ЗАПУСК В DEBUG РЕЖИМЕ!")
     while True:
         start_processing()
         time.sleep(10)

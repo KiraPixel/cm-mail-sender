@@ -1,3 +1,4 @@
+import logging
 import os
 from exchangelib import Credentials, Account, Message, DELEGATE, HTMLBody, FileAttachment, Configuration
 
@@ -8,6 +9,8 @@ sender_password = os.getenv('MAIL_PASSWORD', 'password')
 sender_host = os.getenv('MAIL_HOST', 'mail.ru')
 use_domain_format = os.getenv('USE_DOMAIN_FORMAT', 'at')
 full_username = ''
+
+logger = logging.getLogger('cm_mail_sender')
 
 if use_domain_format == 'backslash':
     full_username = f"{sender_domain}\\{sender_user}"
@@ -30,7 +33,7 @@ def send_email(target_email, subject, body, attachment_name=None, attachment_con
             body=HTMLBody(body),
             to_recipients=[target_email]
         )
-        print(f'Send email to {target_email} with subject "{subject}" from "{sender_email}" login {full_username}')
+        logger.info(f'Send email to {target_email} with subject "{subject}" from "{sender_email}" login {full_username}')
         if attachment_name:
             attachment = FileAttachment(
                 name=attachment_name,
@@ -41,7 +44,7 @@ def send_email(target_email, subject, body, attachment_name=None, attachment_con
         msg.send()
         return True
     except Exception as e:
-        print(f'Произошла ошибка при отправке сообщения: {e}')
+        logger.error(f'Произошла ошибка при отправке сообщения: {e}')
         return False
 
 

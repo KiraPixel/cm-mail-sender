@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from jinja2 import Environment, FileSystemLoader
@@ -5,6 +6,7 @@ import os
 
 # Определяем путь к папке шаблонов
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "standalone")
+logger = logging.getLogger('cm_mail_sender')
 
 # Инициализация Jinja2 окружения
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
@@ -22,7 +24,7 @@ def process_html_template(html_template: str, content: dict) -> str:
         template = env.get_template(f"{html_template}.html")
         return template.render(content)
     except Exception as e:
-        print(f"Ошибка обработки шаблона {html_template}: {e}")
+        logger.error(f"Ошибка обработки шаблона {html_template}: {e}")
         return None
 
 
@@ -51,5 +53,5 @@ def prepare_content_by_template(template_name: str, content):
         }
         return process_html_template(template_name, data)
     else:
-        print(f"Неизвестный шаблон: {template_name}")
+        logger.error(f"Неизвестный шаблон {template_name}:")
         return None

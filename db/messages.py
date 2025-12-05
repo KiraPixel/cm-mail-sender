@@ -1,9 +1,12 @@
+import logging
+
 from sqlalchemy import select
 
 from html import prepare_content_by_template
 from .models import Mailing
 from . import get_db_session, SessionLocal
 
+logger = logging.getLogger('cm_mail_sender')
 
 class MailingMessage:
     def __init__(self, message_id: int, db_session):
@@ -51,5 +54,5 @@ def get_new_messages(db_session=None):
             return None
         return [MailingMessage(message.id, session) for message in new_messages]
     except Exception as e:
-        print(e)
+        logger.error(e)
         return None

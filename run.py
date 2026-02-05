@@ -23,11 +23,6 @@ logger = logging.getLogger('cm_mail_sender')
 
 def start_processing():
     new_messages = get_new_messages()
-    if not get_cm_health():
-        logger.info('CM Health check failed.')
-        logger.info('Wait 1 minute before retrying.')
-        time.sleep(60)
-        return
     if new_messages:
         for message_obj in new_messages:
             logger.info(f'Processing message: {message_obj.message.target_email}')
